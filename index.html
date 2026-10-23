@@ -1,21 +1,839 @@
+
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CyHelp</title>
-</head>
-<body>
-    <ol class="steps">
-        <li class="step active" data-step="0"><span class="step-marker">01</span><span class="step-label">Welcome!</span></li>
-        <li class="step" data-step="1"><span class="step-marker">02</span><span class="step-label">What year is it?</span></li>
-        <li class="step" data-step="2"><span class="step-marker">03</span><span class="step-label">Timeline</span></li>
-        <li class="step" data-step="3"><span class="step-marker">04</span><span class="step-label">What is cybersecurity?</span></li>
-        <li class="step" data-step="4"><span class="step-marker">05</span><span class="step-label">The CIA Triad</span></li>
-        <li class="step" data-step="5"><span class="step-marker">06</span><span class="step-label">Conclusion</span></li>
-    </ol>
-   <p>Hello! I'm CyHelp.</p> 
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-   </nav>
+        body {
+            margin: 0;
+            background-color: #e7eadb;
+            font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+        }
+
+        .page-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px;
+        }
+
+        .beginners {
+            display: inline-block;
+            margin-bottom: 12px;
+            margin-left: -5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background-color: #c7e66b;
+            color: #173c3a;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .cyber-101 {
+            margin: 0 0 5px 7px;
+            color: #52706b;
+            font-family: "SFMono-Regular", Consolas, monospace;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .title {
+            margin: 0;
+            color: #173c3a;
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .description {
+            margin: 0;
+            padding-left: 10px;
+            border-left: 1px solid #cbd4c3;
+            color: #52706b;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .progress-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .progress-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-label {
+            color: #52706b;
+            font-family: "SFMono-Regular", Consolas, monospace;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+        }
+
+        .progress-count {
+            color: #52706b;
+            font-family: "SFMono-Regular", Consolas, monospace;
+            font-size: 12px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            overflow: hidden;
+            border-radius: 999px;
+            background-color: #52706b;
+        }
+
+        .progress-fill {
+            width: 20%;
+            height: 100%;
+            border-radius: 999px;
+            background-color: #c7e66b;
+            transition: width 0.3s ease;
+        }
+
+        .lesson-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 600px;
+            overflow: hidden;
+            border-radius: 16px;
+            background-color: white;
+        }
+
+        .steps-sidebar {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #faf3e3;
+        }
+
+        .learning-path-label {
+            position: absolute;
+            top: 25px;
+            left: 30px;
+            margin: 0;
+            color: #52706b;
+            font-family: "SFMono-Regular", Consolas, monospace;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            width: 100%;
+            margin: 0;
+            padding: 0 0 0 30px;
+            list-style: none;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .step-marker {
+            display: inline-flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: 1px solid #173c3a;
+            border-radius: 50%;
+            background-color: #c7e66b;
+            color: #173c3a;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+            font-size: 10px;
+        }
+
+        .step.active .step-marker {
+            background-color: #173c3a;
+            color: white;
+        }
+
+        .step-label {
+            color: #173c3a;
+            font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .step-content {
+            padding: 40px;
+            background-color: white;
+            color: #173c3a;
+        }
+
+        .section-title {
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .step-content p {
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .step-content label {
+            display: block;
+            margin-bottom: 8px;
+            color: #173c3a;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .step-content input {
+            display: block;
+            width: 100%;
+            max-width: 350px;
+            padding: 12px 14px;
+            border: 1px solid #cbd4c3;
+            border-radius: 8px;
+            outline: none;
+            background-color: white;
+            color: #173c3a;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .step-content input:focus {
+            border-color: #173c3a;
+            box-shadow: 0 0 0 3px rgba(199, 230, 107, 0.4);
+        }
+
+        .next-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 11px 20px;
+            border: 1px solid #173c3a;
+            border-radius: 8px;
+            outline: none;
+            background-color: #173c3a;
+            color: white;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: none;
+            transition: transform 0.2s ease;
+        }
+
+        .next-button:hover,
+        .next-button:focus,
+        .next-button:focus-visible,
+        .next-button:active {
+            outline: none;
+            background-color: #173c3a;
+            color: white;
+            box-shadow: none;
+        }
+
+        .next-button:active {
+            transform: translateY(1px);
+        }
+
+        .timeline-stat {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .timeline-number {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            width: 145px;
+            height: 145px;
+            border-radius: 12px;
+            background-color: #c7e66b;
+            color: #173c3a;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 64px;
+            font-weight: 600;
+        }
+
+        .timeline-stat-text {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .timeline-stat-text p {
+            margin: 0;
+        }
+
+        .timeline-stat-label {
+            color: #52706b;
+            font-family: "SFMono-Regular", Consolas, monospace;
+            font-size: 11px !important;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+        }
+
+        .timeline-stat-description {
+            color: #173c3a;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 20px !important;
+            font-weight: 600;
+            line-height: 1.35 !important;
+        }
+
+        .timeline-section {
+            margin-top: 30px;
+            padding-top: 24px;
+            border-top: 1px solid #cbd4c3;
+        }
+
+        .timeline-section .section-title {
+            margin-bottom: 12px;
+            font-size: 24px;
+        }
+
+        .timeline-section p {
+            margin-top: 0;
+        }
+
+        .footer {
+            margin-top: 25px;
+            padding: 22px 16px;
+            border-radius: 12px;
+            background-color: #173c3a;
+            color: #ffffff;
+            text-align: center;
+            font-size: 13px;
+            letter-spacing: 0.3px;
+        }
+
+        .welcome-page[hidden] {
+            display: none;
+        }
+
+        @media (max-width: 700px) {
+            .page-container {
+                padding: 25px 16px;
+            }
+
+            .page-header {
+                flex-wrap: wrap;
+            }
+
+            .lesson-container {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-sidebar {
+                padding: 24px 0;
+            }
+
+            .learning-path-label {
+                top: 8px;
+                left: 20px;
+            }
+
+            .steps {
+                gap: 16px;
+                padding: 0 20px;
+            }
+
+            .step-content {
+                padding: 28px 24px;
+            }
+
+            .timeline-stat {
+                gap: 16px;
+            }
+
+            .timeline-number {
+                width: 115px;
+                height: 115px;
+                font-size: 52px;
+            }
+
+            .timeline-stat-description {
+                font-size: 18px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page-container">
+        <div class="beginners">For Beginners</div>
+        <p class="cyber-101">CYBER 101</p>
+
+        <header class="page-header">
+            <h1 class="title">CyHelp</h1>
+            <p class="description">
+                A field guide to<br>cybersecurity
+            </p>
+        </header>
+
+        <div class="progress-container">
+            <div class="progress-info">
+                <span class="progress-label">YOUR PROGRESS</span>
+                <span class="progress-count" id="progress-count">1/5 completed</span>
+            </div>
+
+            <div
+                class="progress-track"
+                id="progress-track"
+                role="progressbar"
+                aria-label="Lesson progress"
+                aria-valuemin="0"
+                aria-valuemax="5"
+                aria-valuenow="1"
+            >
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="lesson-container">
+            <aside class="steps-sidebar">
+                <p class="learning-path-label">YOUR LEARNING PATH</p>
+
+                <ol class="steps">
+                    <li class="step active" data-step="0">
+                        <span class="step-marker">01</span>
+                        <span class="step-label">Welcome!</span>
+                    </li>
+                    <li class="step" data-step="1">
+                        <span class="step-marker">02</span>
+                        <span class="step-label">Timeline</span>
+                    </li>
+                    <li class="step" data-step="2">
+                        <span class="step-marker">03</span>
+                        <span class="step-label">What is cybersecurity?</span>
+                    </li>
+                    <li class="step" data-step="3">
+                        <span class="step-marker">04</span>
+                        <span class="step-label">The CIA Triad</span>
+                    </li>
+                    <li class="step" data-step="4">
+                        <span class="step-marker">05</span>
+                        <span class="step-label">Conclusion</span>
+                    </li>
+                </ol>
+            </aside>
+
+            <section class="step-content">
+                <div class="welcome-page" id="welcome-first">
+                    <h2 class="section-title">Hello!</h2>
+
+                    <p>
+                        I'm CyHelp, a chatbot that explains cybersecurity
+                        and the CIA Triad (confidentiality, integrity,
+                        and availability).
+                    </p>
+
+                    <form id="name-form">
+                        <label for="name">What's your name?</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="First Name"
+                            autocomplete="given-name"
+                            required
+                        >
+                        <button type="submit" class="next-button">Next &rarr;</button>
+                    </form>
+                </div>
+
+                <div class="welcome-page" id="welcome-second" hidden>
+                    <h2 class="section-title" id="greeting">Nice to meet you!</h2>
+                    <p>Let's explore the world of cybersecurity.</p>
+                    <button type="button" class="next-button" id="next-second">
+                        Next &rarr;
+                    </button>
+                </div>
+
+                <div class="welcome-page" id="year-page" hidden>
+                    <h2 class="section-title">What year is it?</h2>
+
+                    <form id="year-form">
+                        <label for="year-input">Year</label>
+                        <input
+                            type="number"
+                            id="year-input"
+                            name="year"
+                            placeholder="e.g. 2026"
+                            min="1970"
+                            max="9999"
+                            step="1"
+                            required
+                        >
+                        <button type="submit" class="next-button">Next &rarr;</button>
+                    </form>
+                </div>
+
+                <div class="welcome-page" id="welcome-third" hidden>
+                    <h2 class="section-title">Timeline</h2>
+
+                    <div class="timeline-stat">
+                        <div class="timeline-number" id="years-since-1970">56</div>
+
+                        <div class="timeline-stat-text">
+                            <p class="timeline-stat-label">YEARS SINCE 1970</p>
+                            <p class="timeline-stat-description">the year cybersecurity began</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-section">
+                        <p>
+                            The field of Cybersecurity started in the 1970s
+                            when more and more information started being
+                            stored on computer systems and networks!
+                        </p>
+                    </div>
+
+                    <button type="button" class="next-button" id="next-timeline">
+                        Next &rarr;
+                    </button>
+                </div>
+
+                <div class="welcome-page" id="cybersecurity-page" hidden>
+                    <h2 class="section-title">What is cybersecurity?</h2>
+
+                    <p>
+                        Cybersecurity refers to the practices that people
+                        use to protect computer systems and networks from
+                        cyber attacks.
+                    </p>
+
+                    <p>
+                        These people can be governments/nations,
+                        individuals, companies, community organizations,
+                        and hackers.
+                    </p>
+
+                    <button type="button" class="next-button" id="next-cybersecurity">
+                        Next &rarr;
+                    </button>
+                </div>
+
+                <div class="welcome-page" id="cia-intro-page" hidden>
+                    <h2 class="section-title">The CIA Triad</h2>
+
+                    <p>
+                        The CIA Triad is the model used to discuss
+                        cybersecurity. CIA stands for confidentiality,
+                        integrity, and availability.
+                    </p>
+
+                    <p>Would you like to learn about the CIA Triad?</p>
+
+                    <div class="form-group">
+                        <label for="cia-interest">Answer</label>
+                        <select
+                            id="cia-interest"
+                            style="display: block; width: 100%; max-width: 350px; padding: 12px 14px; border: 1px solid #cbd4c3; border-radius: 8px; background-color: white; color: #173c3a; font-family: inherit; font-size: 14px;"
+                        >
+                            <option value="yes">Yes, let's learn!</option>
+                            <option value="no">No, skip to the conclusion</option>
+                        </select>
+                    </div>
+
+                    <button type="button" class="next-button" id="next-cia-intro">
+                        Next &rarr;
+                    </button>
+                </div>
+
+                <div class="welcome-page" id="cia-topics-page" hidden>
+                    <h2 class="section-title">The CIA Triad</h2>
+
+                    <p>
+                        What would you like to learn more about? Enter
+                        your choice below.
+                    </p>
+
+                    <div class="form-group">
+                        <label for="cia-topic">Topic</label>
+                        <select
+                            id="cia-topic"
+                            style="display: block; width: 100%; max-width: 350px; padding: 12px 14px; border: 1px solid #cbd4c3; border-radius: 8px; background-color: white; color: #173c3a; font-family: inherit; font-size: 14px;"
+                        >
+                            <option value="confidentiality">Confidentiality</option>
+                            <option value="integrity">Integrity</option>
+                            <option value="availability">Availability</option>
+                            <option value="none">None</option>
+                        </select>
+                    </div>
+
+                    <button type="button" class="next-button" id="learn-topic">
+                        Learn more &rarr;
+                    </button>
+                </div>
+
+                <div class="welcome-page" id="cia-detail-page" hidden>
+                    <h2 class="section-title" id="cia-detail-title">Confidentiality</h2>
+                    <p id="cia-detail-description"></p>
+
+                    <button type="button" class="next-button" id="back-to-topics">
+                        Explore another topic &rarr;
+                    </button>
+
+                    <br>
+
+                    <button type="button" class="next-button" id="finish-cia">
+                        Finish lesson &rarr;
+                    </button>
+                </div>
+
+                <div class="welcome-page" id="conclusion-page" hidden>
+                    <h2 class="section-title">Conclusion</h2>
+
+                    <p>
+                        Thanks for chatting with me, and I hope you
+                        learned something new!
+                    </p>
+
+                    <p>
+                        You've explored cybersecurity and learned about
+                        confidentiality, integrity, and availability.
+                    </p>
+
+                    <button type="button" class="next-button" id="restart-button">
+                        Start again &#8634;
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer">
+            Made with Girls Who Code by laurengracebroadbent
+        </footer>
+    </main>
+
+    <script>
+        const nameForm = document.getElementById("name-form");
+        const nameInput = document.getElementById("name");
+
+        const firstPage = document.getElementById("welcome-first");
+        const secondPage = document.getElementById("welcome-second");
+        const yearPage = document.getElementById("year-page");
+        const thirdPage = document.getElementById("welcome-third");
+        const cybersecurityPage = document.getElementById("cybersecurity-page");
+        const ciaIntroPage = document.getElementById("cia-intro-page");
+        const ciaTopicsPage = document.getElementById("cia-topics-page");
+        const ciaDetailPage = document.getElementById("cia-detail-page");
+        const conclusionPage = document.getElementById("conclusion-page");
+
+        const greeting = document.getElementById("greeting");
+        const progressCount = document.getElementById("progress-count");
+        const progressFill = document.getElementById("progress-fill");
+        const progressTrack = document.getElementById("progress-track");
+
+        const yearForm = document.getElementById("year-form");
+        const yearInput = document.getElementById("year-input");
+        const yearsSince1970Element = document.getElementById("years-since-1970");
+
+        const ciaInterest = document.getElementById("cia-interest");
+        const ciaTopic = document.getElementById("cia-topic");
+        const ciaDetailTitle = document.getElementById("cia-detail-title");
+        const ciaDetailDescription = document.getElementById("cia-detail-description");
+
+        const pages = [
+            firstPage,
+            secondPage,
+            yearPage,
+            thirdPage,
+            cybersecurityPage,
+            ciaIntroPage,
+            ciaTopicsPage,
+            ciaDetailPage,
+            conclusionPage
+        ];
+
+        const totalSteps = 5;
+
+        function updateProgress(stepNumber) {
+            const completed = stepNumber + 1;
+            const progress = Math.min((completed / totalSteps) * 100, 100);
+
+            progressCount.textContent =
+                `${Math.min(completed, totalSteps)}/${totalSteps} completed`;
+
+            progressFill.style.width = `${progress}%`;
+
+            progressTrack.setAttribute(
+                "aria-valuenow",
+                Math.min(completed, totalSteps)
+            );
+        }
+
+        function setActiveStep(stepNumber) {
+            document.querySelectorAll(".step").forEach(function (step) {
+                step.classList.remove("active");
+            });
+
+            const activeStep = document.querySelector(
+                `.step[data-step="${stepNumber}"]`
+            );
+
+            if (activeStep) {
+                activeStep.classList.add("active");
+            }
+
+            updateProgress(stepNumber);
+        }
+
+        function showPage(pageToShow, stepNumber) {
+            pages.forEach(function (page) {
+                page.hidden = page !== pageToShow;
+            });
+
+            setActiveStep(stepNumber);
+        }
+
+        nameForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const name = nameInput.value.trim();
+
+            if (!name) {
+                nameInput.focus();
+                return;
+            }
+
+            greeting.textContent = `Nice to meet you, ${name}!`;
+            showPage(secondPage, 0);
+        });
+
+        document.getElementById("next-second").addEventListener("click", function () {
+            showPage(yearPage, 1);
+        });
+
+        yearForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const enteredYear = Number(yearInput.value);
+
+            if (
+                !Number.isInteger(enteredYear) ||
+                enteredYear < 1970 ||
+                enteredYear > 9999
+            ) {
+                yearInput.focus();
+                return;
+            }
+
+            yearsSince1970Element.textContent = enteredYear - 1970;
+            showPage(thirdPage, 1);
+        });
+
+        document.getElementById("next-timeline").addEventListener("click", function () {
+            showPage(cybersecurityPage, 2);
+        });
+
+        document.getElementById("next-cybersecurity").addEventListener("click", function () {
+            showPage(ciaIntroPage, 3);
+        });
+
+        document.getElementById("next-cia-intro").addEventListener("click", function () {
+            if (ciaInterest.value === "yes") {
+                showPage(ciaTopicsPage, 3);
+            } else {
+                showPage(conclusionPage, 4);
+            }
+        });
+
+        document.getElementById("learn-topic").addEventListener("click", function () {
+            const topic = ciaTopic.value;
+
+            if (topic === "none") {
+                showPage(conclusionPage, 4);
+                return;
+            }
+
+            const explanations = {
+                confidentiality: {
+                    title: "Confidentiality",
+                    description: "Confidentiality makes sure data is private."
+                },
+                integrity: {
+                    title: "Integrity",
+                    description: "Integrity makes sure data has not been tampered with and can be trusted."
+                },
+                availability: {
+                    title: "Availability",
+                    description: "Availability makes sure authorized people can access the data."
+                }
+            };
+
+            const explanation = explanations[topic];
+
+            if (!explanation) {
+                ciaTopic.focus();
+                return;
+            }
+
+            ciaDetailTitle.textContent = explanation.title;
+            ciaDetailDescription.textContent = explanation.description;
+
+            showPage(ciaDetailPage, 3);
+        });
+
+        document.getElementById("back-to-topics").addEventListener("click", function () {
+            showPage(ciaTopicsPage, 3);
+        });
+
+        document.getElementById("finish-cia").addEventListener("click", function () {
+            showPage(conclusionPage, 4);
+        });
+
+        document.getElementById("restart-button").addEventListener("click", function () {
+            nameForm.reset();
+            yearForm.reset();
+            ciaInterest.value = "yes";
+            ciaTopic.value = "confidentiality";
+            greeting.textContent = "Nice to meet you!";
+            yearsSince1970Element.textContent = "56";
+
+            showPage(firstPage, 0);
+        });
+
+        updateProgress(0);
+    </script>
 </body>
 </html>
+
+
+
+
+
+
